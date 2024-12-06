@@ -1,5 +1,21 @@
 {
+<<<<<<< HEAD
   "dependencies": {
     "react-anchor-link-smooth-scroll": "^1.0.12"
+=======
+  "name": "team_rookies",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "csv-parser": "^3.0.0",
+    "express": "^4.21.2"
+>>>>>>> e450f669cb48106bb824a20189aff2d52febd671
   }
 }

@@ -16,6 +16,15 @@ const Header = () => {
                     </button>
                 </AnchorLink>
             </div>
+
+            {/* Button to scroll to the CrimeMap section */}
+            <div className="flex justify-center items-center absolute top-3/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <AnchorLink href="#crimeMapSection">
+                    <button className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition">
+                        Click here to go to Crime Map
+                    </button>
+                </AnchorLink>
+            </div>
         </nav>
     );
 };

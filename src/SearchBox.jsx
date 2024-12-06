@@ -16,13 +16,37 @@ const SearchBox = (props) => {
   const [searchText, setSearchText] = useState("");
   const [listPlace, setListPlace] = useState([]);
 
-  // Effect when selectPosition is set, to update searchText and clear listPlace
+  // Effect when selectPosition is set
   React.useEffect(() => {
     if (selectPosition) {
       setSearchText(selectPosition.display_name); // Set the search text to selected position's name
       setListPlace([]); // Clear the list when a position is selected
     }
-  }, [selectPosition]); // Triggered when selectPosition changes
+  }, [selectPosition]);
+
+  const handleSearch = () => {
+    const params = {
+      q: searchText,
+      format: "json",
+      addressdetails: 1,
+      polygon_geojson: 0,
+    };
+    const queryString = new URLSearchParams(params).toString();
+    const requestOptions = { method: "GET", redirect: "follow" };
+    fetch(`${NOMINATIM_BASE_URL}${queryString}`, requestOptions)
+      .then((response) => response.text())
+      .then((result) => {
+        const data = JSON.parse(result);
+        setListPlace(data);
+      })
+      .catch((err) => console.log("err: ", err));
+  };
+
+  const handleClear = () => {
+    setSearchText(""); // Clear the search box
+    setListPlace([]); // Clear the list
+    setSelectedPosition(null); // Clear the selected position
+  };
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
@@ -39,33 +63,20 @@ const SearchBox = (props) => {
         <div
           style={{ display: "flex", alignItems: "center", padding: "0px 20px" }}
         >
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              const params = {
-                q: searchText,
-                format: "json",
-                addressdetails: 1,
-                polygon_geojson: 0,
-              };
-              const queryString = new URLSearchParams(params).toString();
-              const requestOptions = { method: "GET", redirect: "follow" };
-              fetch(`${NOMINATIM_BASE_URL}${queryString}`, requestOptions)
-                .then((response) => response.text())
-                .then((result) => {
-                  const data = JSON.parse(result);
-                  setListPlace(data);
-                })
-                .catch((err) => console.log("err: ", err));
-            }}
-          >
+          <Button variant="contained" color="primary" onClick={handleSearch}>
             Search
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleClear}
+            style={{ marginLeft: "10px" }}
+          >
+            Clear
           </Button>
         </div>
       </div>
 
-      {/* Render the list only if no position is selected */}
       {!selectPosition && (
         <div>
           <List component="nav" aria-label="main mailbox folders">
@@ -89,6 +100,6 @@ const SearchBox = (props) => {
       )}
     </div>
   );
-};
+}; 
 
 export default SearchBox;

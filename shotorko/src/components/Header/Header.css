@@ -1,0 +1,14 @@
+.header {
+    height: 100vh; /* Full viewport height */
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0; /* Optional background color */
+  }
+/*   
+  .header img {
+    max-width: 80%;
+    max-height: 80%;
+  } */
+  

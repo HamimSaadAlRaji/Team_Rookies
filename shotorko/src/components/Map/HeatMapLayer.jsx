@@ -6,6 +6,7 @@ import "leaflet.heat";
 import "leaflet-routing-machine";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import "leaflet/dist/leaflet.css";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -96,48 +97,82 @@ const HeatMap = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="mb-4">
-        <h1 className="text-xl font-semibold mb-2">From</h1>
-        <SearchBox
-          selectPosition={selectPosition}
-          setSelectedPosition={setSelectedPosition}
-        />
+      {/* Flex container for search and map */}
+      <div className="flex flex-wrap lg:flex-nowrap gap-6">
+        {/* Left side - Search Box */}
+        <div className="w-full lg:w-1/3 space-y-6">
+          <div>
+            <h1 className="text-xl font-semibold mb-2">From</h1>
+            <SearchBox
+              selectPosition={selectPosition}
+              setSelectedPosition={setSelectedPosition}
+            />
+          </div>
+          <div>
+            <h1 className="text-xl font-semibold mb-2">To</h1>
+            <SearchBox
+              selectPosition={selectPositionTo}
+              setSelectedPosition={setSelectedPositionTo}
+            />
+          </div>
+        </div>
+
+        {/* Right side - Map */}
+        <div className="w-full lg:w-2/3">
+          <div className="relative border-4 border-gray-400 rounded-lg w-full h-[500px]">
+            <MapContainer
+              center={[52.629729, -1.131592]}
+              zoom={14}
+              className="w-full h-full rounded-lg"
+            >
+              <TileLayer
+                url="http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
+                subdomains={["mt0", "mt1", "mt2", "mt3"]}
+                maxZoom={20}
+              />
+              <HeatMapLayer data={crimeData} />
+
+              {from && from.lat && from.lng && (
+                <Marker
+                  position={[from.lat, from.lng]}
+                  icon={
+                    new L.Icon({
+                      iconUrl:
+                        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+                      iconSize: [25, 41],
+                      iconAnchor: [12, 41],
+                      popupAnchor: [1, -34],
+                    })
+                  }
+                >
+                  <Popup>From location</Popup>
+                </Marker>
+              )}
+
+              {to && to.lat && to.lng && (
+                <Marker
+                  position={[to.lat, to.lng]}
+                  icon={
+                    new L.Icon({
+                      iconUrl:
+                        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+                      iconSize: [25, 41],
+                      iconAnchor: [12, 41],
+                      popupAnchor: [1, -34],
+                    })
+                  }
+                >
+                  <Popup>To location</Popup>
+                </Marker>
+              )}
+
+              {from && to && from.lat && from.lng && to.lat && to.lng && (
+                <RoutingLayer from={from} to={to} />
+              )}
+            </MapContainer>
+          </div>
+        </div>
       </div>
-
-      <div className="mb-4">
-        <h1 className="text-xl font-semibold mb-2">To</h1>
-        <SearchBox
-          selectPosition={selectPositionTo}
-          setSelectedPosition={setSelectedPositionTo}
-        />
-      </div>
-
-      
-      <div className="relative border-4 border-black rounded-lg w-[600px] h-[400px] mx-auto">
-  <MapContainer
-    center={[52.629729, -1.131592]}
-    zoom={14}
-    className="w-full h-full rounded-lg"
-  >
-    <TileLayer
-      url="http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
-      subdomains={["mt0", "mt1", "mt2", "mt3"]}
-      maxZoom={20}
-    />
-    <HeatMapLayer data={crimeData} />
-
-    {from && (
-      <Marker position={[from.lat, from.lng]}>
-        <Popup>From location</Popup>
-      </Marker>
-    )}
-    {to && (
-      <Marker position={[to.lat, to.lng]}>
-        <Popup>To location</Popup>
-      </Marker>
-    )}
-  </MapContainer>
-</div>
     </div>
   );
 };

@@ -1,20 +1,17 @@
 import React from 'react';
 import './Map.css';
 import Heatmap from '../Map/HeatMapLayer'
-import SearchBox from '../Map/SearchBox'
+import "leaflet/dist/leaflet.css";
 
 
 const Map = () => {
     return (
 
-          <div className="relative w-full h-screen">
             
 
-            {/* Heatmap */}
-            <div className="w-full h-full mt-16">
+            <div className="w-full h-[500px] mt-16">
                 <Heatmap />
             </div>
-        </div>
     );
 };
 
